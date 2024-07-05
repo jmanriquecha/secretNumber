@@ -25,10 +25,22 @@ function generaNumeroAleatorio(min, max) {
 
 function validaIntento() {
     let valorUsuario = parseInt(document.getElementById('valorUsuario').value);
+    const elemento = 'parrafo';
+    let textSecreto = 'El número secreto es'
+    let textMayor = `${textSecreto} mayor`;
+    let textMenor = `${textSecreto} menor`;
+    let textGanaste = `¡Ganaste! ${textSecreto.toLowerCase()} es ${numeroSecreto}`;
 
     // Validaciones
     if (numeroSecreto === valorUsuario) {
-        console.log('Ganaste');
+        asignaTextoElementoId(elemento, textGanaste);
+    } else {
+        if (valorUsuario > numeroSecreto) {
+            asignaTextoElementoId(elemento, textMenor);
+        } else {
+            asignaTextoElementoId(elemento, textMayor);
+            console.log(numeroSecreto)
+        }
     }
 
 }
