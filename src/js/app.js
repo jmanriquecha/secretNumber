@@ -4,6 +4,9 @@ const btnReiniciar = document.getElementById('btnReiniciar');
 const txtValorUsuario = document.getElementById('valorUsuario');
 let intentos = 0;
 let numeroSecreto = 0;
+let listaNumerosSorteados = [];
+const numMin = 1;
+const numMax = 10;
 
 // a la escucha de eventos
 btnStart.addEventListener('click', validaIntento);
@@ -15,6 +18,7 @@ btnReiniciar.addEventListener('click', reiniciarJuego);
 function asignaTextoElementoId(id, texto) {
     let elementoId = document.getElementById(id);
     elementoId.innerHTML = texto;
+    return;
 }
 
 /**
@@ -24,7 +28,7 @@ function asignaTextoElementoId(id, texto) {
  * @returns int
  */
 function generaNumeroAleatorio(min, max) {
-    return Math.floor(Math.random() * (max - min) + min) + 1;
+    return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
 function validaIntento() {
@@ -84,8 +88,6 @@ function valoresPorDefecto() {
     // Reinicia intento a 1
     intentos = 1;
 
-    // Genera nuevo número secreto
-    numeroSecreto = generaNumeroSecreto();
     // Cargamos mensajes iniciales
 
     // Habilita input
@@ -104,7 +106,10 @@ function valoresPorDefecto() {
     asignaTextoElementoId('titulo', 'Juego del número secreto!');
 
     // Agregamos texto al elemento p 'parrafo'
-    asignaTextoElementoId('parrafo', 'Ingrese un número del 1 al 10');
+    asignaTextoElementoId('parrafo', `Ingrese un número del ${numMin} al ${numMax}`);
+
+    // Genera nuevo número secreto
+    numeroSecreto = generaNumeroSecreto();
 }
 
 /**
@@ -112,9 +117,23 @@ function valoresPorDefecto() {
  * @returns int
  */
 function generaNumeroSecreto() {
-    const min = 1;
-    const max = 10;
-    return generaNumeroAleatorio(min, max);
+    let numeroGenerado = generaNumeroAleatorio(numMin, numMax);
+    // Si ya sorteamos todos los números
+    if ((listaNumerosSorteados.length) === numMax) {
+        asignaTextoElementoId('parrafo', 'Ya se sortearon todos los números posibles!');
+        // Deshabilita boton
+        habilitaElemento(btnStart);
+        // Deshabilita input
+        habilitaElemento(txtValorUsuario);
+    } else {
+        // si el número generado no se encuentra en el array
+        if (listaNumerosSorteados.includes(numeroGenerado)) {
+            return generaNumeroSecreto();
+        } else {
+            listaNumerosSorteados.push(numeroGenerado);
+            return numeroGenerado;
+        }
+    }
 }
 
 /**
